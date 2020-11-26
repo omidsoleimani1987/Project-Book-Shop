@@ -1,5 +1,3 @@
-import { timeStamp } from 'console';
-
 export class Recipe {
   public name: string;
   public description: string;
