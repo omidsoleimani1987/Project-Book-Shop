@@ -1,4 +1,3 @@
-import { Ingredient } from './ingredient.model';
 /*
 export class Ingredient {
   public name: string;
