@@ -1,20 +1,23 @@
 import { EventEmitter } from '@angular/core';
 
 import { Recipe } from './../shared/models/recipe.model';
+import { Ingredient } from '../shared/models/ingredient.model';
 export class RecipeService {
   // for cross component communication
   recipeSelected = new EventEmitter<Recipe>();
 
   private recipes: Recipe[] = [
     new Recipe(
-      'A test recipe',
-      'this is a test',
-      'https://images.squarespace-cdn.com/content/v1/53861df2e4b03d58a4690cff/1406686608383-YSZYPCOLOZFW1PMBW92D/ke17ZwdGBToddI8pDm48kMnHRrpWSlSCB9XabjgyantZw-zPPgdn4jUwVcJE1ZvWQUxwkmyExglNqGp0IvTJZUJFbgE-7XRK3dMEBRBhUpz4FkPJA585QYBg9EjPvRpkIxxB_SdP_xzqtxyFDizV5aadH9FfX0OATazAJGndjd8/6546676667_e406be7c0f_o.jpg?format=500w'
+      'Tasty Schnitzel',
+      'A super tasty Schnitzel',
+      'https://i3-img.kabeleins.de/pis/ezone/b85cqgELB38wdEB0AB1fHPDQCtTDCJ4UYl_Ic-IXCoYylZ0mXbP3Z8_B4JBo6LCimhDa22AtrTM8DB_M9Sv4e9OM8slbXthgEbE4ubOs1rnC2jOcxZ9a-oZ09bK01Tt0b1vpGmsgVYDky7gxWa9Ji7hMq0kR_pQ2jRtK2fQmW4rytj1AFXX-l6q3zvzGC0WR4MrZm2eVebI8dVElyIxxoffiauzSGJCqKiLU64nsO3YYm77aW-CmLiBxue3Xb7cEvMfmUM1lzYjwCbSan5Q7lQCikI2SfI2G/profile:mag-996x562',
+      [new Ingredient('Meat', 2), new Ingredient('Tomato', 4)]
     ),
     new Recipe(
-      'another recipe',
-      'this is a good food',
-      'https://hips.hearstapps.com/delish/assets/17/39/1506456246-delish-healthy-chicken-casserole-1.jpg'
+      'Big Fat Burger',
+      'what else you need to have?',
+      'https://nebula.wsimg.com/343f16710d2a7d2b8ba4f51115a95f67?AccessKeyId=531592D248B589D87A56&disposition=0&alloworigin=1',
+      [new Ingredient('Meat', 4), new Ingredient('Bread', 2)]
     ),
   ];
 
