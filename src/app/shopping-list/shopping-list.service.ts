@@ -5,10 +5,7 @@ export class ShoppingListService {
   // to inform other components of new changes
   ingredientChanged = new EventEmitter<Ingredient[]>();
 
-  private ingredients: Ingredient[] = [
-    new Ingredient('Apples', 5),
-    new Ingredient('Tomatoes', 7),
-  ];
+  private ingredients: Ingredient[] = [];
 
   getIngredient(): Ingredient[] {
     return this.ingredients.slice();
@@ -16,6 +13,12 @@ export class ShoppingListService {
 
   addIngredient(ingredientItem: Ingredient): void {
     this.ingredients.push(ingredientItem);
+    this.ingredientChanged.emit(this.ingredients.slice());
+  }
+
+  addCompleteIngredients(ingredients: Ingredient[]): void {
+    // spread operator changes the array og elements to a list of elements
+    this.ingredients.push(...ingredients);
     this.ingredientChanged.emit(this.ingredients.slice());
   }
 }
