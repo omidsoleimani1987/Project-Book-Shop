@@ -7,7 +7,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 
-import { Ingredient } from '../../shared/ingredient.model';
+import { Ingredient } from '../../shared/models/ingredient.model';
 @Component({
   selector: 'app-shopping-edit',
   templateUrl: './shopping-edit.component.html',
