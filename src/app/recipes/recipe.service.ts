@@ -21,13 +21,17 @@ export class RecipeService {
       'what else you need to have?',
       'https://nebula.wsimg.com/343f16710d2a7d2b8ba4f51115a95f67?AccessKeyId=531592D248B589D87A56&disposition=0&alloworigin=1',
       [new Ingredient('Meat', 4), new Ingredient('Bread', 2)]
-    ),
+    )
   ];
 
   constructor(private slService: ShoppingListService) {}
 
   getRecipes(): Recipe[] {
     return this.recipes.slice();
+  }
+
+  getRecipeById(index: number): Recipe {
+    return this.recipes[index];
   }
 
   addIngredientsToShoppingList(ingredients: Ingredient[]): void {
