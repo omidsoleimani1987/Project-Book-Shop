@@ -27,8 +27,10 @@
     >
       <!-- Hamburger Icon End -->
       <ul class="nav navbar-nav">
-        <li><a [routerLink]="['/recipes']">Recipes</a></li>
-        <li>
+        <li routerLinkActive="active">
+          <a [routerLink]="['/recipes']">Recipes</a>
+        </li>
+        <li routerLinkActive="active">
           <a [routerLink]="['/shopping-list']">Shopping List</a>
         </li>
       </ul>
