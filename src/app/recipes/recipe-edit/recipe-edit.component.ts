@@ -46,4 +46,8 @@ export class RecipeEditComponent implements OnInit {
       'description': new FormControl(recipeDescription)
     });
   }
+
+  onSubmit(): void {
+    console.log(this.recipeForm.value);
+  }
 }
