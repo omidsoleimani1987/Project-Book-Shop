@@ -6,6 +6,8 @@ export class ShoppingListService {
   // ingredientChanged = new EventEmitter<Ingredient[]>();
   ingredientChanged = new Subject<Ingredient[]>();
 
+  startedEditing = new Subject<number>();
+
   private ingredients: Ingredient[] = [];
 
   getIngredient(): Ingredient[] {
