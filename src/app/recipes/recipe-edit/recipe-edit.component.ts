@@ -1,3 +1,4 @@
+import { Recipe } from './../../shared/models/recipe.model';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -65,7 +66,20 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.recipeForm.value);
+    const newRecipe = new Recipe(
+      this.recipeForm.value['name'],
+      this.recipeForm.value['description'],
+      this.recipeForm.value['imagePath'],
+      this.recipeForm.value['ingredients']
+    );
+
+    if (this.editMode) {
+      this.recipeService.updateRecipe(this.id, newRecipe);
+      // we can do this too - because the property names are exactly like the value property in form
+      // this.recipeService.updateRecipe(this.id, this.recipeForm.value);
+    } else {
+      this.recipeService.addRecipe(newRecipe);
+    }
   }
 
   // getter
