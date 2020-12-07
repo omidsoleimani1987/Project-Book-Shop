@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { Recipe } from './../models/recipe.model';
 
@@ -26,8 +27,8 @@ export class DataStorageService {
       });
   }
 
-  fetchRecipes(): void {
-    this.http
+  fetchRecipes(): Observable<Recipe[]> {
+    return this.http
       .get<Recipe[]>(
         'https://recipe-book-cf05a-default-rtdb.firebaseio.com/recipes.json'
       )
@@ -40,10 +41,10 @@ export class DataStorageService {
               ingredients: recipe.ingredients ? recipe.ingredients : []
             };
           });
+        }),
+        tap(recipes => {
+          this.recipeService.setRecipes(recipes);
         })
-      )
-      .subscribe(responseData => {
-        this.recipeService.setRecipes(responseData);
-      });
+      );
   }
 }
