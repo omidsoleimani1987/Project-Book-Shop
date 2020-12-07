@@ -16,12 +16,22 @@ export class DataStorageService {
 
     // because we want to create or overwrite any existing recipes
     this.http
-      .put(
+      .put<Recipe[]>(
         'https://recipe-book-cf05a-default-rtdb.firebaseio.com/recipes.json',
         recipe
       )
       .subscribe(responseData => {
         console.log(responseData);
+      });
+  }
+
+  fetchRecipes(): void {
+    this.http
+      .get<Recipe[]>(
+        'https://recipe-book-cf05a-default-rtdb.firebaseio.com/recipes.json'
+      )
+      .subscribe(responseData => {
+        this.recipeService.setRecipes(responseData);
       });
   }
 }
