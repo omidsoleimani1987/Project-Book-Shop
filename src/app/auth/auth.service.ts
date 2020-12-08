@@ -27,6 +27,9 @@ export class AuthService {
   // Behavior Subject some how stores the previous emitted value, so we don't have to subscribe to it when we want a value from previous emit, but we can still subscribe and use it just like normal subject, just it needs a starting value
   user = new BehaviorSubject<User>(null);
 
+  // when we logout manually, we have to clear the auto logout timer too
+  private tokenExpirationTimer: any = null;
+
   constructor(private http: HttpClient, private router: Router) {}
 
   private handleError(responseError: HttpErrorResponse): Observable<never> {
@@ -85,6 +88,9 @@ export class AuthService {
 
     // storing the token on the local storage
     localStorage.setItem('userData', JSON.stringify(user));
+
+    // activating the auto logout
+    this.autoLogout(+responseData.expiresIn * 1000);
 
     this.user.next(user);
   }
@@ -159,13 +165,32 @@ export class AuthService {
 
     // check if the token is truthy (not expired) - using the getter
     if (LoadedUser.token) {
+      // activating the auto logout
+      const expirationDuration =
+        new Date(userData._tokenExpirationDate).getTime() -
+        new Date().getTime();
+      this.autoLogout(expirationDuration);
+
       this.user.next(LoadedUser);
     }
   }
 
+  autoLogout(expirationDuration: number): void {
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.logout();
+    }, expirationDuration);
+  }
+
   logout(): void {
     this.user.next(null);
+
     localStorage.removeItem('userData');
+
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+    }
+    this.tokenExpirationTimer = null;
+
     this.router.navigate(['/auth']);
   }
 }
