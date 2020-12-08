@@ -4,6 +4,7 @@ import {
   HttpErrorResponse,
   HttpParams
 } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { User } from './user.model';
 import { catchError, tap } from 'rxjs/operators';
@@ -26,7 +27,7 @@ export class AuthService {
   // Behavior Subject some how stores the previous emitted value, so we don't have to subscribe to it when we want a value from previous emit, but we can still subscribe and use it just like normal subject, just it needs a starting value
   user = new BehaviorSubject<User>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   private handleError(responseError: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An Unknown Error Occurred';
@@ -130,5 +131,10 @@ export class AuthService {
         catchError(this.handleError),
         tap(this.handleAuthentication.bind(this))
       );
+  }
+
+  logout(): void {
+    this.user.next(null);
+    this.router.navigate(['/auth']);
   }
 }
