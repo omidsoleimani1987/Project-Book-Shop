@@ -7,7 +7,7 @@ import {
   UrlTree
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
 
@@ -24,6 +24,8 @@ export class AuthGuard implements CanActivate {
     | boolean
     | UrlTree {
     return this.authService.user.pipe(
+      // first we make sure that we always take the user info once and then unsubscribe or at least not listening to the each emit of user changes for memory performance
+      take(1),
       map(user => {
         // keep in mine user initially returns null for not set user
         const isAuthenticated = !!user;
@@ -36,6 +38,12 @@ export class AuthGuard implements CanActivate {
         // else navigate to another route with urlTree
         return this.router.createUrlTree(['/auth']);
       })
+      // old alternative for createUrlTree
+      //   tap(isAuthenticated => {
+      //       if (!isAuthenticated) {
+      //          this.router.navigate(['/auth']);
+      //       }
+      //   })
     );
   }
 }
