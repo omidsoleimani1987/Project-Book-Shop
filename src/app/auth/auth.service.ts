@@ -152,7 +152,7 @@ export class AuthService {
     } = JSON.parse(localStorage.getItem('userData'));
 
     if (!userData) {
-      this.router.navigate(['/auth']);
+      // this.router.navigate(['/auth']); ---  instead we use route guard
       return;
     }
 
