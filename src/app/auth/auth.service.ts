@@ -83,6 +83,9 @@ export class AuthService {
       expirationDate
     );
 
+    // storing the token on the local storage
+    localStorage.setItem('userData', JSON.stringify(user));
+
     this.user.next(user);
   }
 
@@ -131,6 +134,33 @@ export class AuthService {
         catchError(this.handleError),
         tap(this.handleAuthentication.bind(this))
       );
+  }
+
+  // will be implement in app component at the beginning of the loading of the application
+  autoLogin(): void {
+    const userData: {
+      email: string;
+      id: string;
+      _token: string;
+      _tokenExpirationDate: string;
+    } = JSON.parse(localStorage.getItem('userData'));
+
+    if (!userData) {
+      this.router.navigate(['/auth']);
+      return;
+    }
+
+    const LoadedUser = new User(
+      userData.email,
+      userData.id,
+      userData._token,
+      new Date(userData._tokenExpirationDate)
+    );
+
+    // check if the token is truthy (not expired) - using the getter
+    if (LoadedUser.token) {
+      this.user.next(LoadedUser);
+    }
   }
 
   logout(): void {
