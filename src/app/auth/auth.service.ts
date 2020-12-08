@@ -5,12 +5,13 @@ import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 
 // define the response type
-interface AuthResponseData {
+export interface AuthResponseData {
   idToken: string;
   email: string;
   refreshToken: string;
   expiresIn: string;
   localId: string;
+  registered?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -55,5 +56,22 @@ export class AuthService {
           return throwError(errorMessage);
         })
       );
+  }
+
+  login(userEmail: string, userPassword: string): Observable<AuthResponseData> {
+    return this.http.post<AuthResponseData>(
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword',
+      {
+        email: userEmail,
+        password: userPassword,
+        returnSecureToken: true
+      },
+      {
+        params: new HttpParams().set(
+          'key',
+          'AIzaSyAuz8VDqXqpf3pYsQNsrqezQ2SQwv96t-c'
+        )
+      }
+    );
   }
 }
