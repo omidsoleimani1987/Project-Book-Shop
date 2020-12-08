@@ -102,7 +102,10 @@ export class AuthService {
           )
         }
       )
-      .pipe(catchError(this.handleError), tap(this.handleAuthentication));
+      .pipe(
+        catchError(this.handleError),
+        tap(this.handleAuthentication.bind(this))
+      );
   }
 
   login(userEmail: string, userPassword: string): Observable<AuthResponseData> {
@@ -121,6 +124,9 @@ export class AuthService {
           )
         }
       )
-      .pipe(catchError(this.handleError), tap(this.handleAuthentication));
+      .pipe(
+        catchError(this.handleError),
+        tap(this.handleAuthentication.bind(this))
+      );
   }
 }
