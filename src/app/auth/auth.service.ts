@@ -10,6 +10,8 @@ import { User } from './user.model';
 import { catchError, tap } from 'rxjs/operators';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 // define the response type
 export interface AuthResponseData {
   idToken: string;
@@ -108,10 +110,7 @@ export class AuthService {
           returnSecureToken: true
         },
         {
-          params: new HttpParams().set(
-            'key',
-            'AIzaSyAuz8VDqXqpf3pYsQNsrqezQ2SQwv96t-c'
-          )
+          params: new HttpParams().set('key', environment.fireBaseAPIKey)
         }
       )
       .pipe(
@@ -130,10 +129,7 @@ export class AuthService {
           returnSecureToken: true
         },
         {
-          params: new HttpParams().set(
-            'key',
-            'AIzaSyAuz8VDqXqpf3pYsQNsrqezQ2SQwv96t-c'
-          )
+          params: new HttpParams().set('key', environment.fireBaseAPIKey)
         }
       )
       .pipe(
