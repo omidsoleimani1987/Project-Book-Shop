@@ -1,4 +1,3 @@
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
@@ -8,26 +7,20 @@ import { HeaderComponent } from './header/header.component';
 import { CoreModule } from './core.module';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AuthComponent } from './auth/auth.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { RecipesModule } from './recipes/recipes.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { SharedModule } from './shared/shared.module';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    AuthComponent,
-    NotFoundComponent
-  ],
+  declarations: [AppComponent, HeaderComponent, NotFoundComponent],
   imports: [
     BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
     ShoppingListModule, // for not found route, it should be imported above the route with ** path which is recipes routing
+    AuthModule,
     RecipesModule,
     SharedModule,
     CoreModule
