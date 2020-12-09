@@ -7,21 +7,22 @@ import { HeaderComponent } from './header/header.component';
 import { CoreModule } from './core.module';
 
 import { AppRoutingModule } from './app-routing.module';
-import { NotFoundComponent } from './not-found/not-found.component';
 import { RecipesModule } from './recipes/recipes.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
+import { NotFoundModule } from './not-found/not-found.module';
 
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, NotFoundComponent],
+  declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    ShoppingListModule, // for not found route, it should be imported above the route with ** path which is recipes routing
+    ShoppingListModule,
     AuthModule,
     RecipesModule,
+    NotFoundModule, // for not found route, it should be imported below the other routes
     SharedModule,
     CoreModule
   ],

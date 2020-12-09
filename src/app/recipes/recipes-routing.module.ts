@@ -28,11 +28,6 @@ const routes: Routes = [
         resolve: [RecipesResolverService]
       }
     ]
-  },
-  {
-    path: '**',
-    redirectTo: '/not-found',
-    pathMatch: 'full' // better to add this
   }
 ];
 
