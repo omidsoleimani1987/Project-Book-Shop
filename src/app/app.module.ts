@@ -21,6 +21,7 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
 import { AuthComponent } from './auth/auth.component';
 import { LoadingSpinnerComponent } from './shared/styles/loading-spinner/loading-spinner.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { AlertComponent } from './shared/styles/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     RecipeEditComponent,
     AuthComponent,
     LoadingSpinnerComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
