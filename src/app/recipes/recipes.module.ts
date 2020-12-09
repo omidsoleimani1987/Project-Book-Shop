@@ -26,7 +26,9 @@ import { RecipesComponent } from './recipes.component';
     ReactiveFormsModule,
     RouterModule,
     RecipesRoutingModule
-  ],
+  ]
+  /*
+  we don't have to export recipe components anymore because of our routing design we don;t use any recipe components in app-component as a child directly
   exports: [
     RecipesComponent,
     RecipeListComponent,
@@ -35,5 +37,6 @@ import { RecipesComponent } from './recipes.component';
     RecipeStartComponent,
     RecipeEditComponent
   ]
+  */
 })
 export class RecipesModule {}
