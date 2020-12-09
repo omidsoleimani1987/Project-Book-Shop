@@ -1,6 +1,9 @@
+import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { Ingredient } from './../shared/models/ingredient.model';
+
+@Injectable({ providedIn: 'root' })
 export class ShoppingListService {
   // to inform other components of new changes
   // ingredientChanged = new EventEmitter<Ingredient[]>();
