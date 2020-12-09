@@ -4,7 +4,11 @@
     <!-- <div class="alert alert-danger" *ngIf="error">
       <p>{{ error }}</p>
     </div> -->
-    <app-alert [message]="error" *ngIf="error"></app-alert>
+    <app-alert
+      [message]="error"
+      *ngIf="error"
+      (alertClose)="onHandleError()"
+    ></app-alert>
 
     <!-- if we are loading , showing the spinner -->
     <div *ngIf="isLoading && !error" style="text-align: center">
