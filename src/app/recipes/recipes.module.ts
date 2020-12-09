@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { RecipesRoutingModule } from './recipes-routing.module';
+import { SharedModule } from './../shared/shared.module';
 
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { RecipeStartComponent } from './recipe-start/recipe-start.component';
@@ -20,7 +20,7 @@ import { RecipesComponent } from './recipes.component';
     RecipeStartComponent,
     RecipeEditComponent
   ],
-  imports: [CommonModule, ReactiveFormsModule, RecipesRoutingModule]
+  imports: [SharedModule, ReactiveFormsModule, RecipesRoutingModule]
   /*
   we don't have to export recipe components anymore because of our routing design we don;t use any recipe components in app-component as a child directly
   exports: [
