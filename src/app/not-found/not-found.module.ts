@@ -4,13 +4,9 @@ import { NotFoundComponent } from './not-found.component';
 
 const routes: Routes = [
   {
-    path: 'not-found',
+    // path: 'not-found',  --- change to empty for lazy loading
+    path: '',
     component: NotFoundComponent
-  },
-  {
-    path: '**',
-    redirectTo: '/not-found',
-    pathMatch: 'full' // better to add this
   }
 ];
 

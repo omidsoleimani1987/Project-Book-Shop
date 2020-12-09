@@ -7,11 +7,7 @@ import { HeaderComponent } from './header/header.component';
 import { CoreModule } from './core.module';
 
 import { AppRoutingModule } from './app-routing.module';
-import { RecipesModule } from './recipes/recipes.module';
-import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { SharedModule } from './shared/shared.module';
-import { AuthModule } from './auth/auth.module';
-import { NotFoundModule } from './not-found/not-found.module';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
@@ -19,10 +15,10 @@ import { NotFoundModule } from './not-found/not-found.module';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    ShoppingListModule,
-    AuthModule,
-    RecipesModule,
-    NotFoundModule, // for not found route, it should be imported below the other routes
+    // ShoppingListModule,  --- remove for lazy loading
+    // AuthModule,  --- remove for lazy loading
+    // RecipesModule,  --- remove for lazy loading
+    // NotFoundModule, // for not found route, it should be imported below the other routes  --- remove for lazy loading
     SharedModule,
     CoreModule
   ],
