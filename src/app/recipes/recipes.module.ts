@@ -1,4 +1,3 @@
-import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -21,12 +20,7 @@ import { RecipesComponent } from './recipes.component';
     RecipeStartComponent,
     RecipeEditComponent
   ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    RecipesRoutingModule
-  ]
+  imports: [CommonModule, ReactiveFormsModule, RecipesRoutingModule]
   /*
   we don't have to export recipe components anymore because of our routing design we don;t use any recipe components in app-component as a child directly
   exports: [
