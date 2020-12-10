@@ -39,19 +39,21 @@ export function shoppingListReducer(
 
     // replace one item in array of ingredients
     case ShoppingListActions.UPDATE_INGREDIENT:
-      const ingredientToUpdate = state.ingredients[action.payload.index];
+      const ingredientToUpdate = state.ingredients[state.editedIngredientIndex];
 
       const updatedIngredient = {
         ...ingredientToUpdate,
-        ...action.payload.ingredient
+        ...action.payload
       };
 
       const updatedIngredients = [...state.ingredients];
-      updatedIngredients[action.payload.index] = updatedIngredient;
+      updatedIngredients[state.editedIngredientIndex] = updatedIngredient;
 
       return {
         ...state,
-        ingredients: updatedIngredients
+        ingredients: updatedIngredients,
+        editedIngredient: null,
+        editedIngredientIndex: -1
       };
 
     // delete one item in array of ingredients
@@ -59,8 +61,26 @@ export function shoppingListReducer(
       return {
         ...state,
         ingredients: state.ingredients.filter(
-          (ig, igIndex) => igIndex !== action.payload
-        )
+          (ig, igIndex) => igIndex !== state.editedIngredientIndex
+        ),
+        editedIngredient: null,
+        editedIngredientIndex: -1
+      };
+
+    // start editing the ingredient
+    case ShoppingListActions.START_EDIT:
+      return {
+        ...state,
+        editedIngredient: { ...state.ingredients[action.payload] },
+        editedIngredientIndex: action.payload
+      };
+
+    // stop editing the ingredient
+    case ShoppingListActions.STOP_EDIT:
+      return {
+        ...state,
+        editedIngredient: null,
+        editedIngredientIndex: -1
       };
 
     default:

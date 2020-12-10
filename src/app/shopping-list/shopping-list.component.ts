@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Ingredient } from '../shared/models/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
 import * as fromShoppingList from './store/shopping-list.reducer';
+import * as ShoppingListActions from './store/shopping-list.action';
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',
@@ -25,6 +26,6 @@ export class ShoppingListComponent implements OnInit {
   }
 
   onEditItem(index: number): void {
-    this.slService.startedEditing.next(index);
+    this.store.dispatch(new ShoppingListActions.StartEdit(index));
   }
 }
