@@ -9,7 +9,7 @@ const initialState = {
   ]
 };
 
-export function ShoppingListReducer(
+export function shoppingListReducer(
   state = initialState,
   action: ShoppingListActions.AddIngredient
 ) {
