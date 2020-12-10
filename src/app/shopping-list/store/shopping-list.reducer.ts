@@ -14,17 +14,41 @@ export function shoppingListReducer(
   action: ShoppingListActions.ShoppingListActionTypes
 ) {
   switch (action.type) {
+    // add new single ingredient
     case ShoppingListActions.ADD_INGREDIENT:
       return {
         ...state,
         ingredients: [...state.ingredients, action.payload]
       };
 
+    // add multiple new ingredients
     case ShoppingListActions.ADD_MULTI_INGREDIENTS:
       return {
         ...state,
         ingredients: [...state.ingredients, ...action.payload]
       };
+
+    // replace one item in array of ingredients
+    case ShoppingListActions.UPDATE_INGREDIENT:
+      const ingredient = state.ingredients[action.payload.index];
+
+      const updatedIngredient = {
+        ...ingredient,
+        ...action.payload.ingredient
+      };
+
+      const updatedIngredients = [...state.ingredients];
+
+      updatedIngredients[action.payload.index] = updatedIngredient;
+
+      return {
+        ...state,
+        ingredients: updatedIngredients
+      };
+
+    // delete one item in array of ingredients
+    case ShoppingListActions.DELETE_INGREDIENT:
+      return {};
 
     default:
       return state;
