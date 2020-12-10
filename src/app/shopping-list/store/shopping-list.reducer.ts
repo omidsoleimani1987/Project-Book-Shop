@@ -1,4 +1,3 @@
-import { State } from '@ngrx/store';
 import { Ingredient } from '../../shared/models/ingredient.model';
 
 import * as ShoppingListActions from './shopping-list.action';

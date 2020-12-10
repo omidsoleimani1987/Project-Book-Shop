@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -21,6 +21,7 @@ export class ShoppingListComponent implements OnInit {
   ngOnInit(): void {
     // select a slice of the state and returns an observable
     this.ingredients = this.store.select('shoppingList');
+    // this.ingredients = this.store.select('shoppingList').subscribe(); --- don't need to use asyn pipe in html then
   }
 
   onEditItem(index: number): void {
