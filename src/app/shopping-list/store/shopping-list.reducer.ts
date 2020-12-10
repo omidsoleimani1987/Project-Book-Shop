@@ -30,15 +30,14 @@ export function shoppingListReducer(
 
     // replace one item in array of ingredients
     case ShoppingListActions.UPDATE_INGREDIENT:
-      const ingredient = state.ingredients[action.payload.index];
+      const ingredientToUpdate = state.ingredients[action.payload.index];
 
       const updatedIngredient = {
-        ...ingredient,
+        ...ingredientToUpdate,
         ...action.payload.ingredient
       };
 
       const updatedIngredients = [...state.ingredients];
-
       updatedIngredients[action.payload.index] = updatedIngredient;
 
       return {
@@ -48,7 +47,12 @@ export function shoppingListReducer(
 
     // delete one item in array of ingredients
     case ShoppingListActions.DELETE_INGREDIENT:
-      return {};
+      return {
+        ...state,
+        ingredients: state.ingredients.filter(
+          (ig, igIndex) => igIndex !== action.payload
+        )
+      };
 
     default:
       return state;
