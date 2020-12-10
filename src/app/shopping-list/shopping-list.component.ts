@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 import { Ingredient } from '../shared/models/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
@@ -9,28 +10,20 @@ import { ShoppingListService } from './shopping-list.service';
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.css']
 })
-export class ShoppingListComponent implements OnInit, OnDestroy {
-  ingredients: Ingredient[];
-  private ingredientChangeSubscription: Subscription;
+export class ShoppingListComponent implements OnInit {
+  ingredients: Observable<{ ingredients: Ingredient[] }>;
 
-  constructor(private slService: ShoppingListService) {}
+  constructor(
+    private slService: ShoppingListService,
+    private store: Store<{ shoppingList: { ingredients: Ingredient[] } }>
+  ) {}
 
   ngOnInit(): void {
-    this.ingredients = this.slService.getIngredient();
-
-    // to get new possible changes in the array because we get a slice of the array not original array
-    this.ingredientChangeSubscription = this.slService.ingredientChanged.subscribe(
-      (newIngredientArray: Ingredient[]) => {
-        this.ingredients = newIngredientArray;
-      }
-    );
+    // select a slice of the state and returns an observable
+    this.ingredients = this.store.select('shoppingList');
   }
 
   onEditItem(index: number): void {
     this.slService.startedEditing.next(index);
-  }
-
-  ngOnDestroy(): void {
-    this.ingredientChangeSubscription.unsubscribe();
   }
 }

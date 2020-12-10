@@ -1,11 +1,12 @@
+import { State } from '@ngrx/store';
 import { Ingredient } from '../../shared/models/ingredient.model';
 
 import * as ShoppingListActions from './shopping-list.action';
 
 const initialState = {
   ingredients: [
-    new Ingredient('apples', 5), //
-    new Ingredient('Tomatoes', 10)
+    new Ingredient('Apples', 5), //
+    new Ingredient('Tomatoes', 7)
   ]
 };
 
@@ -19,5 +20,8 @@ export function shoppingListReducer(
         ...state,
         ingredients: [...state.ingredients, action.payload]
       };
+
+    default:
+      return state;
   }
 }
