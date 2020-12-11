@@ -41,7 +41,7 @@ export class AuthEffects {
               new Date().getTime() + +responseData.expiresIn * 1000
             );
 
-            return new AuthActions.LoginSuccess({
+            return new AuthActions.AuthenticateSuccess({
               email: responseData.email,
               userId: responseData.localId,
               token: responseData.idToken,
@@ -52,7 +52,7 @@ export class AuthEffects {
             let errorMessage = 'An Unknown Error Occurred';
 
             if (!responseError.error || !responseError.error.error) {
-              return of(new AuthActions.LoginFail(errorMessage));
+              return of(new AuthActions.AuthenticateFail(errorMessage));
             }
 
             switch (responseError.error.error.message) {
@@ -87,7 +87,7 @@ export class AuthEffects {
                 break;
             }
 
-            return of(new AuthActions.LoginFail(errorMessage));
+            return of(new AuthActions.AuthenticateFail(errorMessage));
           })
         );
     })
@@ -95,11 +95,15 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   authSuccess = this.actions$.pipe(
-    ofType(AuthActions.LOGIN_SUCCESS),
+    ofType(AuthActions.AUTHENTICATE_SUCCESS),
     tap(() => {
       this.router.navigate(['/']);
     })
   );
+
+  // sign up
+  @Effect()
+  authSignup = this.actions$.pipe(ofType(AuthActions.SIGNUP_START));
 
   constructor(
     public actions$: Actions,

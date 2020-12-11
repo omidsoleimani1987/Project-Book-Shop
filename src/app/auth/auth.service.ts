@@ -102,7 +102,7 @@ export class AuthService {
 
     // ! this.user.next(user);
     this.store.dispatch(
-      new AuthActions.LoginSuccess({
+      new AuthActions.AuthenticateSuccess({
         email: responseData.email,
         userId: responseData.localId,
         token: responseData.idToken,
@@ -181,9 +181,8 @@ export class AuthService {
         new Date().getTime();
       this.autoLogout(expirationDuration);
 
-      // ! this.user.next(LoadedUser);
       this.store.dispatch(
-        new AuthActions.LoginSuccess({
+        new AuthActions.AuthenticateSuccess({
           email: LoadedUser.email,
           userId: LoadedUser.id,
           token: LoadedUser.token,
@@ -200,7 +199,6 @@ export class AuthService {
   }
 
   logout(): void {
-    // ! this.user.next(null);
     this.store.dispatch(new AuthActions.Logout());
 
     localStorage.removeItem('userData');
