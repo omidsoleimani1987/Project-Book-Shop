@@ -4,10 +4,14 @@ import { User } from './../user.model';
 
 export interface State {
   user: User;
+  loading: boolean;
+  authError: string;
 }
 
 const initialState: State = {
-  user: null
+  user: null,
+  loading: false,
+  authError: null
 };
 
 export function authReducer(
@@ -25,7 +29,9 @@ export function authReducer(
       );
       return {
         ...state,
-        user
+        user,
+        loading: false,
+        authError: null
       };
 
     // logout case
@@ -33,6 +39,23 @@ export function authReducer(
       return {
         ...state,
         user: null
+      };
+
+    // start logging in
+    case fromAuthActions.LOGIN_START:
+      return {
+        ...state,
+        loading: true,
+        authError: null
+      };
+
+    // login fail
+    case fromAuthActions.LOGIN_FAIL:
+      return {
+        ...state,
+        user: null,
+        loading: false,
+        authError: action.payload
       };
 
     // default case

@@ -24,7 +24,12 @@ export class AuthComponent implements OnInit {
     private store: Store<fromApp.AppState>
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.store.select('auth').subscribe(authState => {
+      this.isLoading = authState.loading;
+      this.error = authState.authError;
+    });
+  }
 
   onSwitchMode(): void {
     this.isLoginMode = !this.isLoginMode;
@@ -50,18 +55,17 @@ export class AuthComponent implements OnInit {
       authenticationObservable = this.authService.signup(email, password);
     }
 
-    authenticationObservable.subscribe(
-      responseData => {
-        // console.log(responseData);
+    // authenticationObservable.subscribe(
+    //   responseData => {
 
-        this.router.navigate(['/recipes']);
-        this.isLoading = false;
-      },
-      ErrorMessage => {
-        this.error = ErrorMessage;
-        this.isLoading = false;
-      }
-    );
+    //     this.router.navigate(['/recipes']);
+    //     this.isLoading = false;
+    //   },
+    //   ErrorMessage => {
+    //     this.error = ErrorMessage;
+    //     this.isLoading = false;
+    //   }
+    // );
 
     authForm.reset();
   }
