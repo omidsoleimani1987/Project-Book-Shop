@@ -17,6 +17,61 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
+// adding  helper functions
+const handleAuthentication = (
+  email: string,
+  userId: string,
+  token: string,
+  expiresIn: number
+) => {
+  const expirationDate = new Date(new Date().getTime() + +expiresIn * 1000);
+
+  return new AuthActions.AuthenticateSuccess({
+    email,
+    userId,
+    token,
+    expirationDate
+  });
+};
+
+const handleError = (responseError: any) => {
+  let errorMessage = 'An Unknown Error Occurred';
+
+  if (!responseError.error || !responseError.error.error) {
+    return of(new AuthActions.AuthenticateFail(errorMessage));
+  }
+
+  switch (responseError.error.error.message) {
+    case 'EMAIL_NOT_FOUND':
+      errorMessage =
+        'There is no user record corresponding to this identifier. The user may have been deleted.';
+      break;
+
+    case 'INVALID_PASSWORD':
+      errorMessage =
+        'The password is invalid or the user does not have a password.';
+      break;
+
+    case 'USER_DISABLED':
+      errorMessage = 'The user account has been disabled by an administrator.';
+      break;
+
+    case 'EMAIL_EXISTS':
+      errorMessage = 'This email address already exists.';
+      break;
+
+    case 'OPERATION_NOT_ALLOWED':
+      errorMessage = 'Password sign-in is disabled for this project.';
+      break;
+
+    case 'TOO_MANY_ATTEMPTS_TRY_LATER':
+      errorMessage =
+        'We have blocked all requests from this device due to unusual activity. Try again later.';
+  }
+
+  return of(new AuthActions.AuthenticateFail(errorMessage));
+};
+
 @Injectable()
 export class AuthEffects {
   @Effect()
@@ -36,59 +91,15 @@ export class AuthEffects {
           }
         )
         .pipe(
-          map(responseData => {
-            const expirationDate = new Date(
-              new Date().getTime() + +responseData.expiresIn * 1000
-            );
-
-            return new AuthActions.AuthenticateSuccess({
-              email: responseData.email,
-              userId: responseData.localId,
-              token: responseData.idToken,
-              expirationDate
-            });
-          }),
-          catchError(responseError => {
-            let errorMessage = 'An Unknown Error Occurred';
-
-            if (!responseError.error || !responseError.error.error) {
-              return of(new AuthActions.AuthenticateFail(errorMessage));
-            }
-
-            switch (responseError.error.error.message) {
-              // sign up error cases
-              case 'EMAIL_EXISTS':
-                errorMessage = 'This email address already exists.';
-                break;
-
-              case 'OPERATION_NOT_ALLOWED':
-                errorMessage = 'Password sign-in is disabled for this project.';
-                break;
-
-              case 'TOO_MANY_ATTEMPTS_TRY_LATER':
-                errorMessage =
-                  'We have blocked all requests from this device due to unusual activity. Try again later.';
-                break;
-
-              // login error cases
-              case 'EMAIL_NOT_FOUND':
-                errorMessage =
-                  'There is no user record corresponding to this identifier. The user may have been deleted.';
-                break;
-
-              case 'INVALID_PASSWORD':
-                errorMessage =
-                  'The password is invalid or the user does not have a password.';
-                break;
-
-              case 'USER_DISABLED':
-                errorMessage =
-                  'The user account has been disabled by an administrator.';
-                break;
-            }
-
-            return of(new AuthActions.AuthenticateFail(errorMessage));
-          })
+          map(responseData =>
+            handleAuthentication(
+              responseData.email,
+              responseData.localId,
+              responseData.idToken,
+              +responseData.expiresIn
+            )
+          ),
+          catchError(responseError => handleError(responseError))
         );
     })
   );
@@ -103,7 +114,34 @@ export class AuthEffects {
 
   // sign up
   @Effect()
-  authSignup = this.actions$.pipe(ofType(AuthActions.SIGNUP_START));
+  authSignup = this.actions$.pipe(
+    ofType(AuthActions.SIGNUP_START),
+    switchMap((signupAction: AuthActions.SignupStart) => {
+      return this.http
+        .post<AuthResponseData>(
+          'https://identitytoolkit.googleapis.com/v1/accounts:signUp',
+          {
+            email: signupAction.payload.email,
+            password: signupAction.payload.password,
+            returnSecureToken: true
+          },
+          {
+            params: new HttpParams().set('key', environment.fireBaseAPIKey)
+          }
+        )
+        .pipe(
+          map(responseData =>
+            handleAuthentication(
+              responseData.email,
+              responseData.localId,
+              responseData.idToken,
+              +responseData.expiresIn
+            )
+          ),
+          catchError(responseError => handleError(responseError))
+        );
+    })
+  );
 
   constructor(
     public actions$: Actions,
