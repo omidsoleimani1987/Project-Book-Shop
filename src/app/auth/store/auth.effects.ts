@@ -33,12 +33,23 @@ export class AuthEffects {
           }
         )
         .pipe(
+          map(responseData => {
+            const expirationDate = new Date(
+              new Date().getTime() + +responseData.expiresIn * 1000
+            );
+
+            return of(
+              new AuthActions.LoginSuccess({
+                email: responseData.email,
+                userId: responseData.localId,
+                token: responseData.idToken,
+                expirationDate
+              })
+            );
+          }),
           catchError(error => {
             // ....
-            of();
-          }),
-          map(responseData => {
-            of();
+            return of();
           })
         );
     })

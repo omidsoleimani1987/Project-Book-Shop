@@ -102,7 +102,7 @@ export class AuthService {
 
     // ! this.user.next(user);
     this.store.dispatch(
-      new AuthActions.Login({
+      new AuthActions.LoginSuccess({
         email: responseData.email,
         userId: responseData.localId,
         token: responseData.idToken,
@@ -183,7 +183,7 @@ export class AuthService {
 
       // ! this.user.next(LoadedUser);
       this.store.dispatch(
-        new AuthActions.Login({
+        new AuthActions.LoginSuccess({
           email: LoadedUser.email,
           userId: LoadedUser.id,
           token: LoadedUser.token,
