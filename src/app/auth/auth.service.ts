@@ -100,7 +100,6 @@ export class AuthService {
     // activating the auto logout
     this.autoLogout(+responseData.expiresIn * 1000);
 
-    // ! this.user.next(user);
     this.store.dispatch(
       new AuthActions.AuthenticateSuccess({
         email: responseData.email,
@@ -109,47 +108,6 @@ export class AuthService {
         expirationDate
       })
     );
-  }
-
-  signup(
-    userEmail: string,
-    userPassword: string
-  ): Observable<AuthResponseData> {
-    return this.http
-      .post<AuthResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp',
-        {
-          email: userEmail,
-          password: userPassword,
-          returnSecureToken: true
-        },
-        {
-          params: new HttpParams().set('key', environment.fireBaseAPIKey)
-        }
-      )
-      .pipe(
-        catchError(this.handleError),
-        tap(this.handleAuthentication.bind(this))
-      );
-  }
-
-  login(userEmail: string, userPassword: string): Observable<AuthResponseData> {
-    return this.http
-      .post<AuthResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword',
-        {
-          email: userEmail,
-          password: userPassword,
-          returnSecureToken: true
-        },
-        {
-          params: new HttpParams().set('key', environment.fireBaseAPIKey)
-        }
-      )
-      .pipe(
-        catchError(this.handleError),
-        tap(this.handleAuthentication.bind(this))
-      );
   }
 
   // will be implement in app component at the beginning of the loading of the application
@@ -207,7 +165,5 @@ export class AuthService {
       clearTimeout(this.tokenExpirationTimer);
     }
     this.tokenExpirationTimer = null;
-
-    this.router.navigate(['/auth']);
   }
 }

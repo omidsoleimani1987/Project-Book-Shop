@@ -43,6 +43,7 @@ export function authReducer(
 
     // start logging in
     case fromAuthActions.LOGIN_START:
+    case fromAuthActions.SIGNUP_START:
       return {
         ...state,
         loading: true,
@@ -56,6 +57,13 @@ export function authReducer(
         user: null,
         loading: false,
         authError: action.payload
+      };
+
+    // clear error
+    case fromAuthActions.CLEAR_ERROR:
+      return {
+        ...state,
+        authError: null
       };
 
     // default case
