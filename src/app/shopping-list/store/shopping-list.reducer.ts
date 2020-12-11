@@ -17,7 +17,7 @@ const initialState: State = {
 export function shoppingListReducer(
   state: State = initialState,
   action: ShoppingListActions.ShoppingListActionTypes
-) {
+): State {
   switch (action.type) {
     // add new single ingredient
     case ShoppingListActions.ADD_INGREDIENT:
