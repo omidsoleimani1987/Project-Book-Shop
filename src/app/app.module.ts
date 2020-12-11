@@ -8,13 +8,12 @@ import { HeaderComponent } from './header/header.component';
 import { CoreModule } from './core.module';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
-import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
-
+import * as fromApp from './store/app.reducer';
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule,
-    StoreModule.forRoot({ shoppingList: shoppingListReducer }),
+    StoreModule.forRoot(fromApp.appReducer),
     HttpClientModule,
     AppRoutingModule,
     // ShoppingListModule,  --- remove for lazy loading
