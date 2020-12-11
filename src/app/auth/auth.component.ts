@@ -2,8 +2,11 @@ import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
+import * as fromApp from '../store/app.reducer';
 import { AuthService, AuthResponseData } from './auth.service';
+import * as AuthActions from './store/auth.action';
 
 @Component({
   selector: 'app-auth',
@@ -15,7 +18,11 @@ export class AuthComponent implements OnInit {
   isLoading = false;
   error: string = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private store: Store<fromApp.AppState>
+  ) {}
 
   ngOnInit(): void {}
 
@@ -37,7 +44,8 @@ export class AuthComponent implements OnInit {
     let authenticationObservable: Observable<AuthResponseData>;
 
     if (this.isLoginMode) {
-      authenticationObservable = this.authService.login(email, password);
+      // authenticationObservable = this.authService.login(email, password);
+      this.store.dispatch(new AuthActions.LoginStart({ email, password }));
     } else {
       authenticationObservable = this.authService.signup(email, password);
     }
