@@ -8,12 +8,18 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 
 import { AuthService } from './auth.service';
+import * as fromApp from '../store/app.reducer';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private store: Store<fromApp.AppState>
+  ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -23,12 +29,12 @@ export class AuthGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return this.authService.user.pipe(
+    return this.store.select('auth').pipe(
       // first we make sure that we always take the user info once and then unsubscribe or at least not listening to the each emit of user changes for memory performance
       take(1),
-      map(user => {
+      map(authState => {
         // keep in mine user initially returns null for not set user
-        const isAuthenticated = !!user;
+        const isAuthenticated = !!authState.user;
 
         // if user is authenticated to visit this route
         if (isAuthenticated) {

@@ -7,13 +7,18 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { take, exhaustMap } from 'rxjs/operators';
+import { take, exhaustMap, map } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 
 import { AuthService } from './auth.service';
+import * as fromApp from '../store/app.reducer';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private store: Store<fromApp.AppState>
+  ) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -27,8 +32,9 @@ export class AuthInterceptorService implements HttpInterceptor {
       request.url ===
       'https://recipe-book-cf05a-default-rtdb.firebaseio.com/recipes.json'
     ) {
-      return this.authService.user.pipe(
+      return this.store.select('auth').pipe(
         take(1),
+        map(authState => authState.user),
         exhaustMap(user => {
           const modifiedRequest = request.clone({
             params: new HttpParams().set('auth', user.token)

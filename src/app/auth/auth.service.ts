@@ -28,7 +28,8 @@ export class AuthService {
   // storing the user as a subject
   // user = new Subject<User>();
   // Behavior Subject some how stores the previous emitted value, so we don't have to subscribe to it when we want a value from previous emit, but we can still subscribe and use it just like normal subject, just it needs a starting value
-  user = new BehaviorSubject<User>(null);
+
+  // ! user = new BehaviorSubject<User>(null);
 
   // when we logout manually, we have to clear the auto logout timer too
   private tokenExpirationTimer: any = null;

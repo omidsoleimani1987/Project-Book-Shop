@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { exhaustMap, map, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { Recipe } from './../models/recipe.model';
 
 import { RecipeService } from './../../recipes/recipe.service';
 import { AuthService } from './../../auth/auth.service';
+import * as fromApp from '../../store/app.reducer';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,8 @@ export class DataStorageService {
   constructor(
     private http: HttpClient,
     private recipeService: RecipeService,
-    private authService: AuthService
+    private authService: AuthService,
+    private store: Store<fromApp.AppState>
   ) {}
 
   storeRecipes(): void {
@@ -39,8 +42,9 @@ export class DataStorageService {
     // *) this.authService.user.pipe(take(1))
     // exhaustMap waits for the first observable to finish, then gives us the data from the previous observable and then returns a new inner observable we return inside the function in exhaustMap
 
-    return this.authService.user.pipe(
+    return this.store.select('auth').pipe(
       take(1),
+      map(authState => authState.user),
       exhaustMap(user => {
         return this.http.get<Recipe[]>(
           'https://recipe-book-cf05a-default-rtdb.firebaseio.com/recipes.json',
