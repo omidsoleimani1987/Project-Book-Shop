@@ -5,13 +5,14 @@ import {
   HttpParams
 } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { catchError, tap } from 'rxjs/operators';
 
 import { User } from './user.model';
-import { catchError, tap } from 'rxjs/operators';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-
 import { environment } from '../../environments/environment';
-
+import * as fromApp from '../store/app.reducer';
+import * as AuthActions from '../auth/store/auth.action';
 // define the response type
 export interface AuthResponseData {
   idToken: string;
@@ -32,7 +33,11 @@ export class AuthService {
   // when we logout manually, we have to clear the auto logout timer too
   private tokenExpirationTimer: any = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private store: Store<fromApp.AppState>
+  ) {}
 
   private handleError(responseError: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An Unknown Error Occurred';
@@ -94,7 +99,15 @@ export class AuthService {
     // activating the auto logout
     this.autoLogout(+responseData.expiresIn * 1000);
 
-    this.user.next(user);
+    // ! this.user.next(user);
+    this.store.dispatch(
+      new AuthActions.Login({
+        email: responseData.email,
+        userId: responseData.localId,
+        token: responseData.idToken,
+        expirationDate
+      })
+    );
   }
 
   signup(
@@ -167,7 +180,15 @@ export class AuthService {
         new Date().getTime();
       this.autoLogout(expirationDuration);
 
-      this.user.next(LoadedUser);
+      // ! this.user.next(LoadedUser);
+      this.store.dispatch(
+        new AuthActions.Login({
+          email: LoadedUser.email,
+          userId: LoadedUser.id,
+          token: LoadedUser.token,
+          expirationDate: new Date(userData._tokenExpirationDate)
+        })
+      );
     }
   }
 
@@ -178,7 +199,8 @@ export class AuthService {
   }
 
   logout(): void {
-    this.user.next(null);
+    // ! this.user.next(null);
+    this.store.dispatch(new AuthActions.Logout());
 
     localStorage.removeItem('userData');
 
