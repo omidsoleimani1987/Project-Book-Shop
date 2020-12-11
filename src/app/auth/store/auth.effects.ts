@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 
 import { environment } from './../../../environments/environment';
 import * as AuthActions from './auth.action';
+import { User } from './../user.model';
 
 export interface AuthResponseData {
   idToken: string;
@@ -25,6 +26,9 @@ const handleAuthentication = (
   expiresIn: number
 ) => {
   const expirationDate = new Date(new Date().getTime() + +expiresIn * 1000);
+
+  const user = new User(email, userId, token, expirationDate);
+  localStorage.setItem('userData', JSON.stringify(user));
 
   return new AuthActions.AuthenticateSuccess({
     email,
@@ -141,6 +145,51 @@ export class AuthEffects {
           ),
           catchError(responseError => handleError(responseError))
         );
+    })
+  );
+
+  // logout
+  @Effect({ dispatch: false })
+  authLogout = this.actions$.pipe(
+    ofType(AuthActions.LOGOUT),
+    tap(() => {
+      localStorage.removeItem('userData');
+    })
+  );
+
+  // auto login
+  @Effect()
+  authAutoLogin = this.actions$.pipe(
+    ofType(AuthActions.AUTO_LOGIN),
+    map(() => {
+      const userData: {
+        email: string;
+        id: string;
+        _token: string;
+        _tokenExpirationDate: string;
+      } = JSON.parse(localStorage.getItem('userData'));
+
+      if (!userData) {
+        return { type: 'dummy' };
+      }
+
+      const LoadedUser = new User(
+        userData.email,
+        userData.id,
+        userData._token,
+        new Date(userData._tokenExpirationDate)
+      );
+
+      if (LoadedUser.token) {
+        return new AuthActions.AuthenticateSuccess({
+          email: LoadedUser.email,
+          userId: LoadedUser.id,
+          token: LoadedUser.token,
+          expirationDate: new Date(userData._tokenExpirationDate)
+        });
+      }
+
+      return { type: 'dummy' };
     })
   );
 

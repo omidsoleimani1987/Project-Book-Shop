@@ -25,13 +25,6 @@ export interface AuthResponseData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  // storing the user as a subject
-  // user = new Subject<User>();
-  // Behavior Subject some how stores the previous emitted value, so we don't have to subscribe to it when we want a value from previous emit, but we can still subscribe and use it just like normal subject, just it needs a starting value
-
-  // ! user = new BehaviorSubject<User>(null);
-
-  // when we logout manually, we have to clear the auto logout timer too
   private tokenExpirationTimer: any = null;
 
   constructor(
@@ -39,76 +32,6 @@ export class AuthService {
     private router: Router,
     private store: Store<fromApp.AppState>
   ) {}
-
-  private handleError(responseError: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An Unknown Error Occurred';
-
-    if (!responseError.error || !responseError.error.error) {
-      return throwError(errorMessage);
-    }
-
-    switch (responseError.error.error.message) {
-      // sign up error cases
-      case 'EMAIL_EXISTS':
-        errorMessage = 'This email address already exists.';
-        break;
-
-      case 'OPERATION_NOT_ALLOWED':
-        errorMessage = 'Password sign-in is disabled for this project.';
-        break;
-
-      case 'TOO_MANY_ATTEMPTS_TRY_LATER':
-        errorMessage =
-          'We have blocked all requests from this device due to unusual activity. Try again later.';
-        break;
-
-      // login error cases
-      case 'EMAIL_NOT_FOUND':
-        errorMessage =
-          'There is no user record corresponding to this identifier. The user may have been deleted.';
-        break;
-
-      case 'INVALID_PASSWORD':
-        errorMessage =
-          'The password is invalid or the user does not have a password.';
-        break;
-
-      case 'USER_DISABLED':
-        errorMessage =
-          'The user account has been disabled by an administrator.';
-        break;
-    }
-
-    return throwError(errorMessage);
-  }
-
-  private handleAuthentication(responseData: AuthResponseData): void {
-    const expirationDate = new Date(
-      new Date().getTime() + +responseData.expiresIn * 1000
-    );
-
-    const user = new User(
-      responseData.email,
-      responseData.localId,
-      responseData.idToken,
-      expirationDate
-    );
-
-    // storing the token on the local storage
-    localStorage.setItem('userData', JSON.stringify(user));
-
-    // activating the auto logout
-    this.autoLogout(+responseData.expiresIn * 1000);
-
-    this.store.dispatch(
-      new AuthActions.AuthenticateSuccess({
-        email: responseData.email,
-        userId: responseData.localId,
-        token: responseData.idToken,
-        expirationDate
-      })
-    );
-  }
 
   // will be implement in app component at the beginning of the loading of the application
   autoLogin(): void {
